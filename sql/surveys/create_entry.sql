@@ -1,0 +1,1 @@
+INSERT INTO `surveys` (`survey_token`, `question`, `answer`) VALUES ('%survey_token%','%question%','%answer%')

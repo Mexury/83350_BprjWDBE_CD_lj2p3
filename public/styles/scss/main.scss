@@ -54,25 +54,18 @@ body {
 	}
 }
 
+#survey-table {
+    margin-top: 100px;
+    margin-bottom: 200px;
+}
+
 #survey-form {
     margin: auto 0;
-    &[data-step="0"] .survey-step[data-step="0"],
-    &[data-step="1"] .survey-step[data-step="1"],
-    &[data-step="2"] .survey-step[data-step="2"],
-    &[data-step="3"] .survey-step[data-step="3"],
-    &[data-step="4"] .survey-step[data-step="4"],
-    &[data-step="5"] .survey-step[data-step="5"],
-    &[data-step="6"] .survey-step[data-step="6"],
-    &[data-step="7"] .survey-step[data-step="7"],
-    &[data-step="8"] .survey-step[data-step="8"],
-    &[data-step="9"] .survey-step[data-step="9"],
-    &[data-step="10"] .survey-step[data-step="10"],
-    &[data-step="11"] .survey-step[data-step="11"],
-    &[data-step="12"] .survey-step[data-step="12"],
-    &[data-step="13"] .survey-step[data-step="13"],
-    &[data-step="14"] .survey-step[data-step="14"],
-    &[data-step="15"] .survey-step[data-step="15"] {
-        display: block;
+
+    @for $i from 0 through 999 {
+        &[data-step="#{$i}"] .survey-step[data-step="#{$i}"] {
+            display: block;
+        }
     }
 }
 

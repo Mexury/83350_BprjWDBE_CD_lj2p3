@@ -1,0 +1,42 @@
+<table>
+    <thead>
+        <tr>
+            <td>ID</td>
+            <td>TOKEN</td>
+            <td>QUESTION</td>
+            <td>ANSWER</td>
+            <td>CREATED</td>
+        </tr>
+    </thead>
+    <tbody>
+        <% surveys.forEach(survey => { %>
+            <tr>
+                <td><%= survey.id %></td>
+                <td><a href="/surveys/<%= survey.survey_token %>"><%= survey.survey_token %></a></td>
+                <td><%= survey.question %></td>
+                <td><%= survey.answer %></td>
+                <td><%= survey.creation_date %></td>
+            </tr>
+        <% }) %>
+    </tbody>
+</table>
+
+<style>
+    table {
+        border-collapse: collapse;
+    }
+    thead {
+        background-color: #bcc5c9;
+    }
+
+    tbody tr {
+        border-bottom: 1px solid #dadada;
+    }
+    tbody tr:nth-of-type(even) {
+        background-color: #f7f7f7;
+    }
+
+    td {
+        padding: 10px;
+    }
+</style>

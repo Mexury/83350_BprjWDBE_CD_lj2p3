@@ -5,13 +5,14 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link rel="stylesheet" href="/styles/css/main.css">
+        <script src="js/components/AsyncSlot.js"></script>
         <title>Document</title>
     </head>
     <body>
         <div class="container">
             <%=session.token%>
         </div>
-        <div class="container" style="display: flex; height: 100%; position: relative;">
+        <div class="container" style="display: flex; flex-direction: column; height: 100%; position: relative;">
             
             <form id="survey-form" data-questions="<%= JSON.stringify(session.questions) %>"
                 style="display: grid; grid-template-columns: repeat(2, 1fr); width: 100%; gap: 80px; margin-top: 200px;">
@@ -28,6 +29,12 @@
                 </div>
             </form>
 
+            <div id="survey-table">
+                <async-slot src="/surveys" id="async-surveys-table"></async-slot>
+                <button id="update-surveys">Update</button>
+                <button id="truncate-surveys">Truncate</button>
+            </div>
+
         </div>
     </body>
 </html>
@@ -40,6 +47,30 @@
 </style>
 
 <script defer>
+
+let asyncSurveysTable = document.querySelector("#async-surveys-table")
+let updateSurveysButton = document.querySelector("#update-surveys")
+let truncateSurveysButton = document.querySelector("#truncate-surveys")
+
+updateSurveysButton.onclick = e => asyncSurveysTable.update()
+truncateSurveysButton.onclick = async e => {
+    const response = await fetch(
+        "/api/reset",
+        {
+            method: "POST",
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({})
+        }
+    )
+    const json = await response.json()
+
+    if (json.success) {
+        window.location.reload()
+    }
+}
+
 
 let surveyForm = document.querySelector("form#survey-form")
 let questionList = surveyForm.querySelector("#question-list")
@@ -141,39 +172,4 @@ surveyForm.onsubmit = async e => {
     // clear question list
     updateQuestionList()
 }
-
-// nextStepButton.onclick = async e => {
-//     let questions = parseInt(surveyForm.getAttribute("data-steps"))
-//     let currentStep = parseInt(surveyForm.getAttribute("data-step"))
-//     let nextStep = currentStep + 1
-//     let inputs = Array.from(surveyForm.querySelectorAll(".survey-step input"))
-
-//     if (nextStep == questions-1) nextStepButton.innerText = "SUBMIT"
-//     if (nextStep == questions) {
-//         nextStepButton.toggleAttribute("disabled", true)
-//         nextStepButton.innerText = "submitting..."
-
-//         let i = 0;
-//         let pairs = []
-        
-//         inputs.forEach(input => pairs.push({ name: input.name, value: input.value }))
-
-//         const response = await fetch(
-//             "/api/submit",
-//             {
-//                 method: "POST",
-//                 headers: {
-//                     'Content-Type': 'application/json'
-//                 },
-//                 body: JSON.stringify({
-//                     data: pairs
-//                 })
-//             }
-//         )
-
-//     } else {
-//         surveyForm.setAttribute("data-step", currentStep+1)
-//     }
-// }
-
 </script>

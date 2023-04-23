@@ -16,7 +16,7 @@
                         <div class="survey-step" data-step="<%=index%>">
                             <div class="input-wrapper">
                                 <label for="<%=question.slug%>>"><%=question.value%></label>
-                                <input type="text" name="<%=question.slug%>">
+                                <input type="text" name="<%=question.slug%>" data-value="<%=question.value%>">
                             </div>
                         </div>
                     <% }) %>
@@ -43,15 +43,15 @@ nextStepButton.onclick = async e => {
     let nextStep = currentStep + 1
     let inputs = Array.from(surveyForm.querySelectorAll(".survey-step input"))
 
-    if (nextStep == questions-1) nextStepButton.innerText = "SUBMIT"
+    if (nextStep == questions-1) nextStepButton.innerText = "Submit"
     if (nextStep == questions) {
         nextStepButton.toggleAttribute("disabled", true)
-        nextStepButton.innerText = "submitting..."
+        nextStepButton.innerText = "Submitting..."
 
         let i = 0;
         let pairs = []
         
-        inputs.forEach(input => pairs.push({ name: input.name, value: input.value }))
+        inputs.forEach(input => pairs.push({ slug: input.name, name: input.getAttribute("data-value"), value: input.value }))
 
         const response = await fetch(
             "/api/submit",
@@ -65,6 +65,14 @@ nextStepButton.onclick = async e => {
                 })
             }
         )
+
+        const json = await response.json()
+        if (json.success) {
+            window.location.replace("/")
+        } else {
+            nextStepButton.toggleAttribute("disabled", false)
+            nextStepButton.innerText = "Submit"
+        }
 
     } else {
         surveyForm.setAttribute("data-step", currentStep+1)
